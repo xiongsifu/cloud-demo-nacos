@@ -1,0 +1,11 @@
+# 订单服务配置
+spring:
+  application:
+    name: service-order          # ★ 服务名。网关要用这个名字(service-order)来路由到我
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848   # ★ 注册到 Nacos
+
+server:
+  port: 9092                     # 订单服务占 9092

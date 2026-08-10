@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  订单服务 service-order 的 pom.xml
+  比用户服务多了两样东西：
+    1) spring-cloud-starter-openfeign      —— 声明式远程调用（像调本地方法一样调别的服务的接口）
+    2) spring-cloud-starter-loadbalancer   —— 配合 Feign：从 Nacos 查出目标服务的真实地址再做负载均衡
+       （Spring Cloud 2022 之后，Feign 调"注册中心里的服务"必须显式加这个，否则启动报错）
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>cloud-demo-nacos</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>service-order</artifactId>
+    <name>service-order</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Nacos 服务发现：自己也要注册，才能被网关/别的服务找到 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- OpenFeign：声明式远程调用 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- LoadBalancer：Feign 调"服务名"时，负责从 Nacos 解析真实地址 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,23 @@
+# ===== 编译产物 =====
+# target/ 里是 Maven 打包生成的 .class 和 .jar，体积大（本项目三个模块合计 117MB）
+# 且别人拿到源码自己 mvn package 就能重新生成，所以绝不上传
+target/
+**/target/
+
+# ===== IDE 配置（每台电脑不一样，不该共享）=====
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# ===== 日志 =====
+*.log
+logs/
+
+# ===== 系统垃圾文件 =====
+.DS_Store
+Thumbs.db

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  网关 gateway 的 pom.xml
+  注意：网关用 WebFlux（响应式），【绝对不能】引入 spring-boot-starter-web，否则启动冲突。
+  这里只引入：gateway（网关核心） + nacos-discovery（让网关也能从 Nacos 发现下游服务）。
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>cloud-demo-nacos</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>gateway</artifactId>
+    <name>gateway</name>
+
+    <dependencies>
+        <!-- 网关核心（基于 WebFlux，不要配 web starter） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <!-- Nacos 服务发现：网关要从 Nacos 查到 user/order 服务的真实地址 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!--
+          ★ 关键依赖：LoadBalancer（负载均衡器）。
+          网关路由里写了 uri: lb://service-order，这个 "lb://" 前缀意思是
+          "用 LoadBalancer 从 Nacos 解析出 service-order 的真实 IP:端口再转发"。
+          在 Spring Cloud 2022.0+（Spring Boot 3.x）里，LoadBalancer 不再随
+          Gateway 自动打包，必须【显式加这个依赖】，否则网关找不到下游实例、
+          所有 lb:// 路由一律返回 503 Service Unavailable。
+        -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

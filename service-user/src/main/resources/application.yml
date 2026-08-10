@@ -1,0 +1,12 @@
+# 用户服务配置
+spring:
+  application:
+    name: service-user          # ★ 服务的"名字"。订单服务要用这个名字来找我，不是用 IP！
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848   # ★ Nacos 注册中心的地址（Nacos 默认端口 8848）
+        # enabled: true               # 默认就是 true，写在这里提醒你：本服务会去注册
+
+server:
+  port: 9091                     # 这个服务占用 9091 端口

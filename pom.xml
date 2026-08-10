@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  父工程 pom.xml —— 微服务 Demo（Nacos 注册中心版）
+  =====================================================================
+  这一册（第 09 册进阶）和「简化版 cloud-demo」的区别：
+    简化版：订单服务写死 http://localhost:9091 调用户服务（硬编码，不好维护）
+    Nacos版：三个服务启动时都把自己的地址"注册"到 Nacos，
+             调用方只写"服务名 service-user"，地址由 Nacos 自动分配 —— 这才是生产真实做法。
+
+  版本说明（这套是 Spring 官方验证过的兼容组合，避免踩版本冲突的坑）：
+    Spring Boot              3.3.4
+    Spring Cloud            2023.0.3
+    Spring Cloud Alibaba    2023.0.3.2   ← 提供了 Nacos 的客户端依赖
+    Nacos Server            2.4.3        ← 要单独下载启动的"注册中心"软件
+  =====================================================================
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父工程：统一管理三个子模块的版本 -->
+    <groupId>com.example</groupId>
+    <artifactId>cloud-demo-nacos</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>cloud-demo-nacos</name>
+    <description>Spring Cloud 微服务 Demo（接入 Nacos 注册中心）</description>
+
+    <!-- 继承 Spring Boot 父 pom：自动管理常见依赖版本 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <java.version>17</java.version>
+        <!-- 这两个"BOM"（依赖清单）由我们手动引入，统一管理 Spring Cloud 全家桶版本 -->
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
+    </properties>
+
+    <!-- 三个子模块：用户服务、订单服务、网关 -->
+    <modules>
+        <module>service-user</module>
+        <module>service-order</module>
+        <module>gateway</module>
+    </modules>
+
+    <!-- dependencyManagement：只"声明版本"，子模块用到时才真正引入，避免版本冲突 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Cloud 官方 BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Alibaba BOM（里面有 Nacos / Sentinel / Seata 的客户端） -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

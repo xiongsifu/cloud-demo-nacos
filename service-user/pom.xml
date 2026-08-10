@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  用户服务 service-user 的 pom.xml
+  比简化版多了「Nacos 服务发现」依赖：
+    spring-cloud-starter-alibaba-nacos-discovery
+  它的作用是：服务启动时，自动把"我是谁 + 我的地址"报到 Nacos。
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>cloud-demo-nacos</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>service-user</artifactId>
+    <name>service-user</name>
+
+    <dependencies>
+        <!-- Web 开发基础（内置 Tomcat + Spring MVC） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ★ Nacos 服务发现客户端：把本服务注册到 Nacos、也能从 Nacos 发现别的服务 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!-- 打包成可执行 jar -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

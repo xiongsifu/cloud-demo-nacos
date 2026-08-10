@@ -1,0 +1,25 @@
+# 网关配置
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848   # 网关也要连 Nacos，才能发现下游服务
+    gateway:
+      # routes = 路由规则。浏览器只认网关 9090，由网关决定请求转给谁
+      routes:
+        # 规则一：/user/** 的请求，转给 service-user 服务
+        - id: user-route
+          uri: lb://service-user     # ★ lb:// = 用 LoadBalancer 从 Nacos 解析 service-user 的真实地址
+          predicates:
+            - Path=/user/**
+
+        # 规则二：/order/** 的请求，转给 service-order 服务
+        - id: order-route
+          uri: lb://service-order    # ★ 同样从 Nacos 解析，不再写死 9092
+          predicates:
+            - Path=/order/**
+
+server:
+  port: 9090                        # 网关是唯一对外暴露的端口
